@@ -1,4 +1,4 @@
-
+package com.vmware.vcac.qe;
 /**
  * Compares the VMWare stock prices from Yahoo Finance and Google Finance UI
  * @author Prativa
