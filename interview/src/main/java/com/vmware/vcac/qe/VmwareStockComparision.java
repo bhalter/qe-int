@@ -29,12 +29,12 @@ public class VmwareStockComparision {
 	 * stockPrice gives a mapping of the dataSource and the current stock price
 	 * in it
 	 */
-	private static HashMap<String, Double> stockPrices;
+	private  HashMap<String, Double> stockPrices;
 	/**
 	 * Gives the name of the data source with the highest stock price if present
 	 */
-	private static String highestStockPriceSource = null;
-	private static double highestStockPrice = Double.MIN_VALUE;
+	private  String highestStockPriceSource = null;
+	private  double highestStockPrice = Double.MIN_VALUE;
 
 	
 	/**
@@ -66,7 +66,7 @@ public class VmwareStockComparision {
 	 *            represents list of data sources whose stock prices need to be
 	 *            compared
 	 */
-	public static void getStockPrices(List<String> DataSources) {
+	public  void getStockPrices(List<String> DataSources) {
 		String financeApi;
 		if (!DataSources.isEmpty()) {
 			for (String dataSource : DataSources) {
@@ -94,7 +94,7 @@ public class VmwareStockComparision {
 	 * @param apiclass
 	 *            class name of the finance api of the datasource
 	 */
-	public static void getStockPrice(String dataSource, String apiClass) {
+	public  void getStockPrice(String dataSource, String apiClass) {
 		double price = Double.parseDouble(VmwareConnectionDriver
 				.getStockData(apiClass));
 		stockPrices.put(dataSource, price);
@@ -110,7 +110,7 @@ public class VmwareStockComparision {
 	 * This method handles the comparison of various stock prices and logs on to
 	 * the console the output.
 	 */
-	public static void compareStockPrices() {
+	public  void compareStockPrices() {
 		StringBuilder output = new StringBuilder();
 		output.append("\n********VMWARE STOCK ANALYSIS********\n");
 		if (highestStockPriceSource == null) {
@@ -118,7 +118,7 @@ public class VmwareStockComparision {
 			for (Entry<String, Double> entry : stockPrices.entrySet()) {
 				output.append(entry.getKey() + ", ");
 			}
-			output.append("are in sync with price of" + highestStockPrice);
+			output.append("are in sync with price of " + highestStockPrice);
 		} else {
 			output.append("The Datasource " + highestStockPriceSource
 					+ " is showing the highest with a value of "
@@ -136,7 +136,7 @@ public class VmwareStockComparision {
 	 * 
 	 * @return List of all the datasource names whose prices need to be compared
 	 */
-	public static List<String> getDataSources() {
+	public  List<String> getDataSources() {
 		List<String> DataSources = Arrays.asList("google", "yahoo");
 		return DataSources;
 	}
