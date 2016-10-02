@@ -6,6 +6,12 @@ import org.apache.http.client.methods.HttpUriRequest;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+/**
+ * An implementation of the Quotable interface for the MarketOnDemand site.
+ * 
+ * @author willwallace
+ *
+ */
 public class MarketOnDemand implements Quotable {
 
 	float quote = 0.0F;
@@ -17,11 +23,11 @@ public class MarketOnDemand implements Quotable {
 	}
 
 	@Override
-	public void process (final String payload) {
+	public void process(final String payload) {
 		JsonObject jobj = new JsonParser().parse(payload).getAsJsonObject();
 		quote = jobj.get("LastPrice").getAsFloat();
 	}
-	
+
 	@Override
 	public float getQuote() {
 		return quote;
@@ -31,9 +37,9 @@ public class MarketOnDemand implements Quotable {
 	public String getName() {
 		return name;
 	}
-	
+
 	@Override
 	public String getReport() {
-		return String.format("%s=%s",getName(), quote);
+		return String.format("%s=%s", getName(), quote);
 	}
 }

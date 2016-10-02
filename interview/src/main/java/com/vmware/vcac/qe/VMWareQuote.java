@@ -11,8 +11,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Gather stock quotes for VMW from two sources on a schedule (every 5 minutes).  
- * Print and compare the results. 
+ * Gather stock quotes for VMW from two sources on a schedule (every 5 minutes).
+ * Print and compare the results.
+ * 
  * @author willwallace
  */
 public class VMWareQuote {
@@ -20,7 +21,9 @@ public class VMWareQuote {
 
 	/**
 	 * main: Entry point.
-	 * @param args: not used
+	 * 
+	 * @param args:
+	 *            not used
 	 * @throws InterruptedException|IOException
 	 */
 	public static void main(String[] args) {
@@ -30,23 +33,21 @@ public class VMWareQuote {
 				final java.util.List<Quotable> quotes = new ArrayList<Quotable>();
 				quotes.add(new YahooFinance());
 				quotes.add(new MarketOnDemand());
-				
-				
+
 				for (final Quotable quote : quotes) {
 					client.execute(quote);
 					LOG.info(String.format("Quote: %f", quote.getQuote()));
 				}
-				
+
 				for (final Quotable quote : quotes) {
 					LOG.info(quote.getReport());
 				}
-				LOG.info(String.format("Difference=%f",CalculateDifference(
-						quotes.get(0).getQuote(), 
-						quotes.get(1).getQuote())));
-				
+				LOG.info(String.format("Difference=%f",
+						CalculateDifference(quotes.get(0).getQuote(), quotes.get(1).getQuote())));
+
 				Thread.sleep(TimeUnit.MINUTES.toMillis(5L));
 			}
-		} catch (IOException|InterruptedException e) {
+		} catch (IOException | InterruptedException e) {
 			LOG.info(String.format("Caught %s. %s", e.getClass().getName(), e.getMessage()));
 		} finally {
 			try {
@@ -56,13 +57,16 @@ public class VMWareQuote {
 			}
 		}
 	}
-	
-/**
- * Calculate the difference between two floats
- * @param f1 first float value
- * @param f2 second float value
- * @return difference
- */
+
+	/**
+	 * Calculate the difference between two floats
+	 * 
+	 * @param f1
+	 *            first float value
+	 * @param f2
+	 *            second float value
+	 * @return difference
+	 */
 	public static float CalculateDifference(final float f1, final float f2) {
 		return Math.abs(f1 - f2);
 	}

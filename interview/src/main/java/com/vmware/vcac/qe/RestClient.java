@@ -24,48 +24,53 @@ import org.apache.http.util.EntityUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-
-
 /**
  * Rest Client for performing requests
+ * 
  * @author willwallace
  *
  */
-public class RestClient implements Closeable{
+public class RestClient implements Closeable {
 	private Log log = LogFactory.getLog(RestClient.class);
 	final CloseableHttpClient client;
 
 	public RestClient() {
 		client = HttpClientBuilder.create().disableContentCompression().build();
 	}
-	
+
+	/**
+	 * Execute a query
+	 * 
+	 * @param quote
+	 *            Quotable interface containing the REST request to perform
+	 * @throws IOException
+	 */
 	public void execute(final Quotable quote) throws IOException {
 
 		ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
 
-            @Override
-            public String handleResponse(
-                    final HttpResponse response) throws ClientProtocolException, IOException {
-                int status = response.getStatusLine().getStatusCode();
-                if (status >= 200 && status < 300) {
-                    HttpEntity entity = response.getEntity();
-                    if (entity != null) {
-	                    final String responseBody = EntityUtils.toString(entity);
-	                    EntityUtils.consume(entity);
-	                    return responseBody;
-                    } 
-                    return null;
-                } else {
-                    throw new ClientProtocolException("Unexpected response status: " + status);
-                }
-            }
-        };
-   
+			@Override
+			public String handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
+				int status = response.getStatusLine().getStatusCode();
+				if (status >= 200 && status < 300) {
+					HttpEntity entity = response.getEntity();
+					if (entity != null) {
+						final String responseBody = EntityUtils.toString(entity);
+						EntityUtils.consume(entity);
+						return responseBody;
+					}
+					return null;
+				} else {
+					throw new ClientProtocolException("Unexpected response status: " + status);
+				}
+			}
+		};
+
 		final String responseBody = client.execute(quote.getRequest(), responseHandler);
 		log.debug(responseBody);
 		quote.process(responseBody);
 	}
-	
+
 	@Override
 	public void close() throws IOException {
 		client.close();
