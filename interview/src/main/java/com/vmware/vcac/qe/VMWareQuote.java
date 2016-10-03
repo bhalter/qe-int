@@ -36,15 +36,9 @@ public class VMWareQuote {
 
 				for (final Quotable quote : quotes) {
 					client.execute(quote);
-					LOG.info(String.format("Quote: %f", quote.getQuote()));
 				}
 
-				for (final Quotable quote : quotes) {
-					LOG.info(quote.getReport());
-				}
-				LOG.info(String.format("Difference=%f",
-						CalculateDifference(quotes.get(0).getQuote(), quotes.get(1).getQuote())));
-
+				logOutput(quotes);
 				Thread.sleep(TimeUnit.MINUTES.toMillis(5L));
 			}
 		} catch (IOException | InterruptedException e) {
@@ -58,6 +52,21 @@ public class VMWareQuote {
 		}
 	}
 
+	/**
+	 * Log the output
+	 * @param quotes List of quotes to log from
+	 */
+	public static void logOutput(final java.util.List<Quotable> quotes) {
+		String logline = "";
+		for (final Quotable quote : quotes) {
+			logline += quote.getReport() + ", ";
+		}
+		logline += String.format("Difference %f", CalculateDifference(
+				quotes.get(0).getQuote(), 
+				quotes.get(1).getQuote()));
+		LOG.info(logline);
+	}
+	
 	/**
 	 * Calculate the difference between two floats
 	 * 
