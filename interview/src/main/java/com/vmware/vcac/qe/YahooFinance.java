@@ -1,7 +1,16 @@
 package com.vmware.vcac.qe;
 
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
 /**
  * An implementation of the Quotable interface for the YahooFinance site.
@@ -21,19 +30,21 @@ public class YahooFinance implements Quotable {
 
 	@Override
 	public void process(String payload) {
-		// TODO Use a json parser to parse
-		// final Gson gson = new GsonBuilder().create();
-		// final YahooWrapper wrapper = gson.fromJson(payload,
-		// YahooWrapper.class);
-		// final List list = wrapper.getList();
-		// quote = wrapper.getList().getResources()[0].getFields().getPrice();
-
-		// Workaround
-		String s = "\"price\" : \"";
-		final int start = payload.indexOf(s) + s.length();
-		final int end = payload.indexOf("\",", start);
-		final String value = payload.substring(start, end);
-		quote = Float.parseFloat(value);
+		JsonObject jobj = new JsonParser().parse(payload).getAsJsonObject();
+		JsonObject list = jobj.get("list").getAsJsonObject();
+		JsonArray resources = list.get("resources").getAsJsonArray();
+		JsonObject resource0 = resources.get(0).getAsJsonObject();
+		JsonObject resource = resource0.get("resource").getAsJsonObject();
+		JsonObject fields = resource.get("fields").getAsJsonObject();
+		
+		final Set<Entry<String,JsonElement>> entrySet = fields.entrySet();
+		for (final Entry<String,JsonElement> entry : entrySet) {
+			if ("price".equals(entry.getKey())) {
+				quote = Float.parseFloat(entry.getValue().getAsString());
+				break;
+			}
+		}
+		
 	}
 
 	@Override
